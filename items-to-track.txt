@@ -1,0 +1,75 @@
+Brainstorming
+
+1. Users 
+2. email
+3. password
+4. recipes
+5. instructions
+6. individual ingredients
+7. price of individual items
+8. recipe total cost
+9. rating
+10. pictures
+11. comments
+12. occasions
+
+
+Table Ideas
+
+1. Users Table: "contains user information like email and password"
+
+2. recipe Table: "contains  instructions, individual ingredients, price of each item, total cost of recipe, private or not"
+
+3. groceries table: "contains grocery lists for users to add ingredients to"
+
+4. ratings table: "contains rating of recipe and comments"
+
+5. occasions table: "contains user assigned occasions of events or holidays that a recipe is best used for"
+
+
+Relationships
+
+    One-to-One
+        Occasion to recipe: a recipe can have an occasion
+    One-to-Many
+        Users to Recipe: one user can have many recipes but a recipe cannot have many Users
+    Many-to-Many:
+        Recipe to Ratings to Users: a recipe can have many ratings and comments, and a user can have many ratings and comments on recipes
+        Grocery Table to Users to Recipes: Users can have grocery lists that contain recipes and can be viewed by other Users
+
+SQL:
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  email VARCHAR(30) NOT NULL,
+  password VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE recipes (
+  recipe_id SERIAL PRIMARY KEY,
+  instructions TEXT NOT NULL,
+  recipe_total_cost FLOAT NOT NULL,
+  individual_ingredient TEXT NOT NULL,
+  ingredient_price FLOAT NOT NULL,
+  isPrivate BOOLEAN NOT NULL,
+  user_id INTEGER NOT NULL REFERENCES users(user_id)
+);
+
+CREATE TABLE groceries (
+	groceries_id SERIAL PRIMARY KEY,
+    grocery_list TEXT NOT NULL,
+	user_id INTEGER NOT NULL REFERENCES users(user_id),
+  recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id)
+);
+
+CREATE TABLE ratings (
+	ratings_id SERIAL PRIMARY KEY,
+    comments TEXT NOT NULL,
+    user_id INTEGER NOT NULL REFERENCES users(user_id),
+	recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id)
+);
+
+CREATE TABLE occasions (
+	occasion_id SERIAL PRIMARY KEY,
+    event TEXT NOT NULL,
+    recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id)
+);
